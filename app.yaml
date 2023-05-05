@@ -1,0 +1,311 @@
+openapi: 3.0.0
+info:
+  title: Produk Api
+  description: |-
+    Contoh API untuk Produk Penjualan
+  contact:
+    email: ari@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Microservice
+  - url: http://localhost:8000
+    description: Penjualan
+  - url: http://localhost:3000
+    description: Monolitch
+tags:
+  - name: Produk
+    description: Proses Autentikasi
+  - name: Pemasok
+    description: Penjualan
+paths:
+  /register:
+    post:
+      tags:
+        - Produk
+      summary: Produk Baru
+      description: Produk Baru (desc)
+      operationId: post-register-user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                produk:
+                  type: string
+                  example: sepatu
+                ukuran:
+                  type: integer
+                  example: 42
+                harga:
+                  type: integer
+                  example: 130000
+      responses:
+        "201":
+          description: berhasil mendaftarkan produk
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      produk:
+                        type: string
+                        example: sepatu
+                      ukuran:
+                        type: integer
+                        example: 42
+                      harga:
+                        type: integer
+                        example: 130000
+        "400":
+          description: Error from user
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: email already used!
+                      data:
+                        type: object
+                  - type: object
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: produk, ukuran and harga is required!
+                      data:
+                        type: object
+              examples:
+                duplicated-email:
+                  summary: If produk already used
+                  value:
+                    status: false
+                    message: produk already used!
+                    data: {}
+                bad-request:
+                  summary: If required data is not provided
+                  value:
+                    status: false
+                    message: produk, ukuran and harga is required!
+                    data: {}
+
+  /login:
+    post:
+      tags:
+        - Produk
+      summary: Mendapatkan token
+      description: Mendapatkan token (desc)
+      operationId: post-login-user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: ari@mail.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        "200":
+          description: Success Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+        "400":
+          description: Error from user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: email or password is invalid!
+                  data:
+                    type: object
+  /whoami:
+    get:
+      tags:
+        - Produk
+      summary: Mendapatkan info produk
+      description: Mendapatkan info produk (desc)
+      operationId: get-whoami
+      responses:
+        "200":
+          description: Success Validated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          produk:
+                            type: string
+                            example: sepatu
+                          ukuran:
+                            type: integer
+                            example: 42
+                          harga:
+                            type: integer
+                            example: 130000
+      security:
+        - jwt_token: []
+  /pemasok/{id}:
+    put:
+      tags:
+        - Pemasok
+      summary: Update pemasok
+      description: Update pemasok (desc)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: id of pemasok
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                produk:
+                  type: string
+                  example: sepatu
+                description:
+                  type: string
+                  example: Harga minta nego
+      responses:
+        "200":
+          description: Success Validated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: integer
+                    example: 1
+  /pemasok:
+    post:
+      tags:
+        - Pemasok
+      summary: menambahkan data pemasok
+      description: menambahkan data pemasok (desc)
+      operationId: post-pemasok-user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: yanto
+                description:
+                  type: string
+                  example: Pembeli
+      responses:
+        "200":
+          description: Success Validated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: integer
+                    example: 1
+/Pemasok:
+  get:
+    tags:
+      - Pemasok
+    summary: menampilkan list pemasok
+    description: menampilkan list pemasok (desc)
+    operationId: get-pemasok
+
+    responses:
+      "200":
+        description: Success Validated
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: boolean
+                message:
+                  type: string
+                  example: success
+                data:
+                  type: integer
+  security:
+    - jwt_token: []
+components:
+  securitySchemes:
+    jwt_token:
+      type: apiKey
+      in: header
+      name: token

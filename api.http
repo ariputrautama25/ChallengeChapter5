@@ -1,0 +1,36 @@
+
+// Home
+GET http://localhost:8000
+
+
+### Get all pemasok
+GET http://localhost:8000/pemasoks
+
+### Get detail pemasok
+GET http://localhost:8000/pemasoks/1
+
+### Create pemasok data
+POST http://localhost:8000/pemasoks
+Content-Type: application/json
+
+{
+    "pemasok_id": "1",
+    "nama": "yanto"
+}
+
+### Update pemasok data
+PUT http://localhost:8000/pemasoks/1
+Content-Type: application/json
+
+{
+    "name": "yanti"
+}
+
+### Delete pemasok data
+DELETE  http://localhost:8000/suppliers/1
+
+
+
+
+
+
